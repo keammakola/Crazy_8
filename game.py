@@ -1,3 +1,4 @@
+import os
 import random
 
 def create_deck():
@@ -36,6 +37,11 @@ def pile(deck):
     pile = []
     pile += deck[0]
     return pile
+def turn_selector(players):
+    current_turn = players[0]
+    players.append(players[0])
+    players.pop(0)
+    return current_turn, players
 
 if __name__ == "__main__":
     deck = create_deck()
@@ -44,5 +50,39 @@ if __name__ == "__main__":
     hands, deck = deal_hands(players,deck)
     pile = pile(deck)
     print(pile)
+    while True:
+
+        os.system('cls' if os.name == 'nt' else 'clear')
+        current_turn , players = turn_selector(players)
+        player_hand = hands[current_turn]
+        print(f"It is {current_turn}'s turn. \n\nCurrent card on the pile: {pile}\n\nHere are your cards:\n{player_hand}\n")
+        pile_card_number = pile[0]
+        pile_suit = pile[1]
+        playable_cards = []
+        for card in player_hand:
+            if card[0] == pile_card_number or card[1] == pile_suit:
+                if card not in playable_cards:
+                    playable_cards.append(card)
+        print(f"Select one of the following playable cards to play. Pick from 1 to {len(playable_cards)+1}.")
+
+        for i in playable_cards:
+            print(f"{playable_cards.index(i)+1}. {i}")
+        deck_command = f"{len(playable_cards) + 1}. Pick card from deck."
+        print(deck_command)
+        deck_command = int(deck_command.split(".")[0])
+        played_card = int(input(""))
+
+        if played_card != deck_command:
+            pile = playable_cards[played_card-1]
+            player_hand.remove(pile)
+        else:
+            player_hand.append(deck[0])
+            deck.pop(0)
+
+        continue
+
+
+
+
 
 
