@@ -4,16 +4,16 @@ import time
 
 def create_deck():
     deck = []
-    suits = ("♥","♦","♠","♣")
-    faces = ("jack","queen","king","ace")
+    suits = ("\u2665","\u2666","\u2660","\u2663")
+    ranks = ("Jack","Queen","King","Ace")
     number_of_decks = 2
 
     for i in range(number_of_decks):
         for suit in suits:
-            for i in range(2,11):
-                deck.append((i,suit))
-            for face in faces:
-                deck.append((face,suit))
+            for j in range(2,11):
+                deck.append((j,suit))
+            for rank in ranks:
+                deck.append((rank,suit))
     return deck
 def deck_shuffle(deck):
     random.shuffle(deck)
@@ -64,18 +64,22 @@ if __name__ == "__main__":
             if card[0] == pile_card_number or card[1] == pile_suit:
                 if card not in playable_cards:
                     playable_cards.append(card)
-        print(f"Select one of the following playable options to play. Pick from 1 to {len(playable_cards)+1}.")
-
-        for i in playable_cards:
-            print(f"{playable_cards.index(i)+1}. {i}")
         deck_command = f"{len(playable_cards) + 1}. Pick card from deck."
-        print(deck_command)
+        if current_turn == "cpu":
+            time.sleep(2)
+            played_card = random.choice(range(1,len(playable_cards)+1))
+        else:
+            print(f"Select one of the following playable options to play. Pick from 1 to {len(playable_cards)+1}.")
+
+            for i in playable_cards:
+                print(f"{playable_cards.index(i)+1}. {i}")
+            print(deck_command)
+            played_card = int(input(""))
         deck_command = int(deck_command.split(".")[0])
-        played_card = int(input(""))
 
         if played_card != deck_command:
             os.system('cls' if os.name == 'nt' else 'clear')
-            print(f"You have played {playable_cards[played_card-1]}")
+            print(f"{current_turn} has played {playable_cards[played_card-1]}")
             time.sleep(2.5)
             pile = playable_cards[played_card-1]
             player_hand.remove(pile)
