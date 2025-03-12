@@ -1,3 +1,4 @@
+import random
 
 def create_deck():
     deck = []
@@ -10,8 +11,11 @@ def create_deck():
         for face in faces:
             deck.append((face,suit))
     return deck
-
+def deck_shuffle(deck):
+    random.shuffle(deck)
+    return deck
 
 
 if __name__ == "__main__":
     deck = create_deck()
+    deck_shuffle(deck)
