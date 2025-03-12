@@ -22,8 +22,6 @@ def player_creator(number:int):
         players.append("cpu")
     return players
 
-
-
 if __name__ == "__main__":
     deck = create_deck()
     shuffled_deck = deck_shuffle(deck)
