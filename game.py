@@ -43,6 +43,10 @@ def turn_selector(players):
     players.append(players[0])
     players.pop(0)
     return current_turn, players
+def terminal_clear():
+    return os.system('cls' if os.name == 'nt' else 'clear')
+def time_delay():
+    return time.sleep(2)
 
 if __name__ == "__main__":
     deck = create_deck()
@@ -53,7 +57,7 @@ if __name__ == "__main__":
     print(pile)
     while True:
 
-        os.system('cls' if os.name == 'nt' else 'clear')
+        terminal_clear()
         current_turn , players = turn_selector(players)
         player_hand = hands[current_turn]
         print(f"It is {current_turn}'s turn.\n\nHere are your cards:\n{player_hand} \n\nCurrent card on the pile: {pile}\n")
@@ -78,20 +82,20 @@ if __name__ == "__main__":
         deck_command = int(deck_command.split(".")[0])
 
         if played_card != deck_command:
-            os.system('cls' if os.name == 'nt' else 'clear')
+            terminal_clear()
             print(f"{current_turn} has played {playable_cards[played_card-1]}")
-            time.sleep(2.5)
+            time_delay()
             pile = playable_cards[played_card-1]
             player_hand.remove(pile)
         else:
-            os.system('cls' if os.name == 'nt' else 'clear')
+            terminal_clear()
             print(f"You picked up {deck[0]}")
-            time.sleep(2.5)
+            time_delay()
             player_hand.append(deck[0])
             deck.pop(0)
         if len(player_hand) == 0:
             print(f"{current_turn} has won the game!")
-            time.sleep(5)
+            time_delay()
             break
 
         continue
