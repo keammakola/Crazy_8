@@ -1,9 +1,10 @@
 import os
 import random
+import time
 
 def create_deck():
     deck = []
-    suits = ("hearts","diamonds","spades","clubs")
+    suits = ("♥","♦","♠","♣")
     faces = ("jack","queen","king","ace")
     number_of_decks = 2
 
@@ -55,7 +56,7 @@ if __name__ == "__main__":
         os.system('cls' if os.name == 'nt' else 'clear')
         current_turn , players = turn_selector(players)
         player_hand = hands[current_turn]
-        print(f"It is {current_turn}'s turn. \n\nCurrent card on the pile: {pile}\n\nHere are your cards:\n{player_hand}\n")
+        print(f"It is {current_turn}'s turn.\n\nHere are your cards:\n{player_hand} \n\nCurrent card on the pile: {pile}\n")
         pile_card_number = pile[0]
         pile_suit = pile[1]
         playable_cards = []
@@ -63,7 +64,7 @@ if __name__ == "__main__":
             if card[0] == pile_card_number or card[1] == pile_suit:
                 if card not in playable_cards:
                     playable_cards.append(card)
-        print(f"Select one of the following playable cards to play. Pick from 1 to {len(playable_cards)+1}.")
+        print(f"Select one of the following playable options to play. Pick from 1 to {len(playable_cards)+1}.")
 
         for i in playable_cards:
             print(f"{playable_cards.index(i)+1}. {i}")
@@ -73,11 +74,21 @@ if __name__ == "__main__":
         played_card = int(input(""))
 
         if played_card != deck_command:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"You have played {playable_cards[played_card-1]}")
+            time.sleep(2.5)
             pile = playable_cards[played_card-1]
             player_hand.remove(pile)
         else:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"You picked up {deck[0]}")
+            time.sleep(2.5)
             player_hand.append(deck[0])
             deck.pop(0)
+        if len(player_hand) == 0:
+            print(f"{current_turn} has won the game!")
+            time.sleep(5)
+            break
 
         continue
 
