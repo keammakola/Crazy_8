@@ -31,12 +31,18 @@ def deal_hands(players,deck):
             hand.append(deck[0])
             deck.pop(0)
         player_hands[player] = hand
-    return player_hands
+    return player_hands ,deck
+def pile(deck):
+    pile = []
+    pile += deck[0]
+    return pile
 
 if __name__ == "__main__":
     deck = create_deck()
-    print(len(deck))
     shuffled_deck = deck_shuffle(deck)
     players = player_creator(int(input("How many players will be playing today?\nCrazy 8 allows 2-8 players.If you want to play with CPU, enter 1: ")))
-    hands = deal_hands(players,deck)
-    print(hands)
+    hands, deck = deal_hands(players,deck)
+    pile = pile(deck)
+    print(pile)
+
+
