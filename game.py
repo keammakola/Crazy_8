@@ -2,109 +2,98 @@ import random
 import os
 import time
 
-def create_deck():
-    deck = []
-    suits = ("\u2665","\u2666","\u2660","\u2663")
-    ranks = ("Jack","Queen","King","Ace")
-    decks_num = 2
 
-    for i in range(decks_num):
-        for suit in suits:
-            for j in range(2,11):
-                deck.append((j,suit))
-            for rank in ranks:
-                deck.append((rank,suit))
+def create_deck(decks_num=2):
+    suits = ("\u2665", "\u2666", "\u2660", "\u2663")
+    ranks = list(range(2, 11)) + ["Jack", "Queen", "King", "Ace"]
+    return [(rank, suit) for _ in range(decks_num) for suit in suits for rank in ranks]
 
-    return deck
-def shuffler(deck):
+
+def shuffle_deck(deck):
     random.shuffle(deck)
-def player_creator(number:int):
-    players = []
-    for i in range(number):
-        players.append(f"player_{i + 1}")
-    if number == 1:
+
+
+def create_players(num_players):
+    players = [f"player_{i + 1}" for i in range(num_players)]
+    if num_players == 1:
         players.append("cpu")
     return players
-def deal_cards(hand,number,deck):
-    for i in range(number):
-        hand.append(deck[0])
-        deck.pop(0)
-    return deck,hand
-def pile_creator(deck):
-    pile = []
-    pile += deck[0]
-    deck.pop(0)
-    return pile,deck
-def terminal_clear():
-    return os.system('cls' if os.name == 'nt' else 'clear')
-def turn_selector(players):
-    current_turn = players[0]
-    players.append(players[0])
-    players.pop(0)
-    return current_turn , players
-def time_delay():
-    return time.sleep(2)
-#
-def game_initialisation():
+
+
+def deal_cards(deck, num_cards=8):
+    return [deck.pop(0) for _ in range(num_cards)]
+
+
+def initialize_game():
     deck = create_deck()
-    shuffler(deck)
-    players_input = int(input("How many players will be playing today?\nCrazy 8 allows 2-8 players.If you want to play with CPU, enter 1: "))
-    players = player_creator(players_input)
-    player_hands = {}
-    for player in players:
-        hand = []
-        deck , hand = deal_cards(hand,8,deck)
-        player_hands[player] = hand
-    pile,deck = pile_creator(deck)
+    shuffle_deck(deck)
+    num_players = int(input("How many players? (2-8, enter 1 for CPU): "))
+    players = create_players(num_players)
+    player_hands = {player: deal_cards(deck) for player in players}
+    pile = [deck.pop(0)]
+    return deck, players, player_hands, pile
 
 
-    return deck , players , player_hands,pile
+def clear_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-def game_loop(players,pile):
-    while True:
-        terminal_clear()
-        current_turn , players = turn_selector(players)
-        player_hand = player_hands[current_turn]
-        print(f"It is {current_turn}'s turn.\n\nHere are your cards:\n{player_hand} \n\nCurrent card on the pile: {pile}\n")
-        pile_card_number = pile[0]
-        pile_suit = pile[1]
-        playable_cards = []
-        for card in player_hand:
-            if card[0] == pile_card_number or card[1] == pile_suit:
-                if card not in playable_cards:
-                    playable_cards.append(card)
-        deck_command = f"{len(playable_cards) + 1}. Pick card from deck."
+
+def next_turn(players):
+    players.append(players.pop(0))
+    return players[0]
+
+
+def display_game_state(current_turn, player_hand, pile):
+    clear_terminal()
+    print(f"{current_turn}'s turn.\nYour cards: {player_hand}\nCurrent card: {pile[-1]}\n")
+
+
+def get_playable_cards(player_hand, pile):
+    pile_rank, pile_suit = pile[-1]
+    return [card for card in player_hand if card[0] == pile_rank or card[1] == pile_suit]
+
+
+def player_move(current_turn, player_hand, pile, deck):
+    playable_cards = get_playable_cards(player_hand, pile)
+    if playable_cards:
         if current_turn == "cpu":
             time.sleep(2)
-            played_card = random.choice(range(1, len(playable_cards) + 1))
+            chosen_card = random.choice(playable_cards)
         else:
-            print(f"Select one of the following playable options to play. Pick from 1 to {len(playable_cards) + 1}.")
+            for idx, card in enumerate(playable_cards, 1):
+                print(f"{idx}. {card}")
+            print(f"{len(playable_cards) + 1}. Pick from deck")
+            choice = int(input("Choose an option: "))
+            if choice == len(playable_cards) + 1:
+                chosen_card = None
+            else:
+                chosen_card = playable_cards[choice - 1]
 
-            for i in playable_cards:
-                print(f"{playable_cards.index(i) + 1}. {i}")
-            print(deck_command)
-            played_card = int(input(""))
-        deck_command = int(deck_command.split(".")[0])
+        if chosen_card:
+            player_hand.remove(chosen_card)
+            pile.append(chosen_card)
+            print(f"{current_turn} played {chosen_card}")
+            time.sleep(2)
 
-        if played_card != deck_command:
-            terminal_clear()
-            print(f"{current_turn} has played {playable_cards[played_card - 1]}")
-            time_delay()
-            pile = playable_cards[played_card - 1]
-            player_hand.remove(pile)
-        else:
-            terminal_clear()
-            print(f"You picked up {deck[0]}")
-            time_delay()
-            deal_cards(player_hand,1,deck)
-        if len(player_hand) == 0:
-            print(f"{current_turn} has won the game!")
-            time_delay()
+
+    if playable_cards or chosen_card is not None:
+        drawn_card = deck.pop(0)
+        player_hand.append(drawn_card)
+        print(f"{current_turn} picked {drawn_card}")
+        time.sleep(2)
+
+def game_loop(players, player_hands, pile, deck):
+    while True:
+        clear_terminal()
+        current_turn = next_turn(players)
+        display_game_state(current_turn, player_hands[current_turn], pile)
+        player_move(current_turn, player_hands[current_turn], pile, deck)
+
+        if player_hands[current_turn] is not True:
+            print(f"{current_turn} has won!")
             break
 
-        continue
 
 if __name__ == "__main__":
-    deck,players,player_hands,pile = (game_initialisation())
-    game_loop(players,pile)
-
+    deck, players, player_hands, pile = initialize_game()
+    game_loop(players, player_hands, pile, deck)
