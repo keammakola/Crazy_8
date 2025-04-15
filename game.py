@@ -39,9 +39,10 @@ def terminal_clear():
     return os.system('cls' if os.name == 'nt' else 'clear')
 def turn_selector(players):
     current_turn = players[0]
+    next_turn = players[1]
     players.append(players[0])
     players.pop(0)
-    return current_turn , players
+    return current_turn , players, next_turn
 def time_delay():
     return time.sleep(2)
 def game_initialisation():
@@ -58,11 +59,18 @@ def game_initialisation():
 
 
     return deck , players , player_hands,pile
+def take_two(next_hand,deck):
+    return deal_cards(next_hand,2,deck)
+def skip(players):
+    players.append(players[0])
+    players.pop(0)
+    return players
 
 def game_loop(players,pile):
     while True:
         terminal_clear()
-        current_turn , players = turn_selector(players)
+        current_turn , players, next_turn= turn_selector(players)
+        next_hand = player_hands[next_turn]
         player_hand = player_hands[current_turn]
         print(f"It is {current_turn}'s turn.\n\nHere are your cards:\n{player_hand} \n\nCurrent card on the pile: {pile}\n")
         pile_card_number = pile[0]
@@ -88,6 +96,13 @@ def game_loop(players,pile):
         if played_card != deck_command:
             terminal_clear()
             print(f"{current_turn} has played {playable_cards[played_card - 1]}")
+            if playable_cards[played_card - 1][0] == 2:
+                take_two(next_hand,deck)
+                print(f"{current_turn} has made {next_turn} pick up 2 cards")
+            elif playable_cards[played_card - 1][0] == 7:
+                players = skip(players)
+                print(f"{current_turn} has skipped {next_turn}.")
+            # add feature that accounts for take two, reverse, skip, change colour
             time_delay()
             pile = playable_cards[played_card - 1]
             player_hand.remove(pile)
