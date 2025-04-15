@@ -102,7 +102,11 @@ def game_loop(players,pile):
             elif playable_cards[played_card - 1][0] == 7:
                 players = skip(players)
                 print(f"{current_turn} has skipped {next_turn}.")
-            # add feature that accounts for take two, reverse, skip, change colour
+            elif playable_cards[played_card - 1][0] == "Jack":
+                players.reverse()
+                players = skip(players)
+                print(f"{current_turn} has reversed the order of play.")
+            # add feature that accounts for change colour
             time_delay()
             pile = playable_cards[played_card - 1]
             player_hand.remove(pile)
