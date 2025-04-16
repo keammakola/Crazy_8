@@ -65,7 +65,7 @@ def skip(players):
     players.pop(0)
     return players
 
-def game_loop(players,pile,player_hands):
+def game_loop(players,pile):
     next_suit = "null"
     while True:
         terminal_clear()
@@ -150,5 +150,5 @@ def game_loop(players,pile,player_hands):
 
 if __name__ == "__main__":
     deck,players,player_hands,pile,suits = (game_initialisation())
-    game_loop(players,pile,player_hands)
+    game_loop(players,pile)
 
