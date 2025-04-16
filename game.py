@@ -52,7 +52,7 @@ def turn_selector(players):
     return current_turn, players, next_turn
 
 def time_delay():
-    time.sleep(0.5)
+    time.sleep(2)
 
 def game_initialisation():
     deck, suits = create_deck()
@@ -94,7 +94,9 @@ def game_loop(players, pile, player_hands, suits, deck):
         next_hand = player_hands[next_turn]
         player_hand = player_hands[current_turn]
 
-        print(f"It is {current_turn}'s turn.\n\nYour cards:\n{player_hand}\n\nCurrent pile card: {pile}\n")
+        print(f"It is {current_turn}'s turn.")
+        time_delay()
+        print(f"\n\nYour cards:\n{player_hand}\n\nCurrent pile card: {pile}\n")
         pile_card_number = pile[0]
         pile_suit = next_suit if pile_card_number == 8 else pile[1]
 
