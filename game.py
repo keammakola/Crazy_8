@@ -1,7 +1,7 @@
 import random
 import os
 import time
-from typing import List, Tuple
+from typing import List
 
 class Card:
     def __init__(self, rank, suit):
@@ -39,7 +39,7 @@ class Deck:
                 print("Deck is empty, cannot deal more cards.")
         return hand
 
-    def draw(self) -> Card:
+    def draw(self):
         if self.cards:
             return self.cards.pop(0)
         else:
