@@ -98,8 +98,10 @@ class CrazyEightGame:
                 if 1 <= players_input <= 8:
                     break
                 else:
+                    self.terminal_clear()
                     print("Please enter a valid number between 1 and 8.")
             except ValueError:
+                self.terminal_clear()
                 print("Invalid input. Please enter a number.")
 
         self.players = self.player_creator(players_input)
