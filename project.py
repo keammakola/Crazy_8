@@ -210,7 +210,11 @@ class CrazyEightGame:
                 self.time_delay()
                 break
 
-if __name__ == "__main__":
+
+def main():
     game = CrazyEightGame()
     game.game_initialisation()
     game.game_loop()
+
+if __name__ == "__main__":
+    main()
