@@ -1,5 +1,7 @@
 # Crazy 8 (South African Version)
 
+VIDEO LINK: https://youtu.be/rrMi2K_YkUc
+
 Crazy 8 is a fun and fast-paced card game that is perfect for family and friends. In the South African version of the game, we use a special local twist.
 
 ## Objective
