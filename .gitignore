@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.idea/
 testing.py
 
 # Distribution / packaging
